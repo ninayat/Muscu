@@ -1,0 +1,12 @@
+{
+  "name": "IronFeed",
+  "short_name": "IronFeed",
+  "description": "Log. Share. Get stronger.",
+  "start_url": "/feed",
+  "display": "standalone",
+  "background_color": "#0E1116",
+  "theme_color": "#185FA5",
+  "icons": [
+    { "src": "/icon", "sizes": "any", "type": "image/png" }
+  ]
+}
