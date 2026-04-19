@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SignOutButton } from "./SignOutButton";
 
 export function TopBar({
   username,
@@ -7,6 +8,7 @@ export function TopBar({
   username: string | null;
   image: string | null | undefined;
 }) {
+  const profileHref = username ? `/profile/${username}` : "/feed";
   return (
     <header className="sticky top-0 z-30 bg-white/80 dark:bg-ink-900/80 backdrop-blur border-b border-black/5 dark:border-white/5">
       <div className="max-w-xl mx-auto px-4 h-14 flex items-center justify-between">
@@ -21,14 +23,16 @@ export function TopBar({
             + Invite
           </Link>
           <Link
-            href={`/profile/${username ?? ""}`}
+            href={profileHref}
             className="w-8 h-8 rounded-full overflow-hidden bg-black/10 dark:bg-white/10"
+            aria-label="My profile"
           >
             {image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={image} alt="me" className="w-full h-full object-cover" />
             ) : null}
           </Link>
+          <SignOutButton />
         </div>
       </div>
     </header>

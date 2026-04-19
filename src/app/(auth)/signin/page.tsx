@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { SignInForm } from "./SignInForm";
 
 export const metadata = { title: "Sign in — IronFeed" };
@@ -12,6 +13,18 @@ export default async function SignInPage() {
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
   );
   const hasEmail = Boolean(process.env.EMAIL_SERVER && process.env.EMAIL_FROM);
+  const hasDevAuth =
+    process.env.NODE_ENV !== "production" ||
+    process.env.ENABLE_DEV_AUTH === "true";
+
+  // Surface seeded users for one-click dev sign-in.
+  const devUsers = hasDevAuth
+    ? await prisma.user.findMany({
+        select: { email: true, name: true, username: true, image: true },
+        orderBy: { createdAt: "asc" },
+        take: 6
+      })
+    : [];
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6">
@@ -27,7 +40,12 @@ export default async function SignInPage() {
             </p>
           </div>
         </div>
-        <SignInForm hasGoogle={hasGoogle} hasEmail={hasEmail} />
+        <SignInForm
+          hasGoogle={hasGoogle}
+          hasEmail={hasEmail}
+          hasDevAuth={hasDevAuth}
+          devUsers={devUsers}
+        />
       </div>
     </main>
   );

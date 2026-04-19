@@ -21,6 +21,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "missing_message" }, { status: 400 });
   }
 
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json(
+      {
+        text: "🧠 IronCoach is offline — set `ANTHROPIC_API_KEY` in your `.env` to enable AI programme tweaks. (Get a key at https://console.anthropic.com/.)"
+      },
+      { status: 200 }
+    );
+  }
+
   const workouts = await prisma.workout.findMany({
     where: {
       userId: session.user.id,
