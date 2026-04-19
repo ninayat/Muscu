@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { detectAndCreatePRs } from "@/lib/pr";
-import type { Category } from "@prisma/client";
+import type { Category } from "@/lib/ppl";
 
 const VALID_CATEGORIES: Category[] = ["PUSH", "PULL", "LEGS", "OTHER"];
 

@@ -1,7 +1,9 @@
-import { PrismaClient, Category } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { subDays } from "date-fns";
 
 const prisma = new PrismaClient();
+
+type Category = "PUSH" | "PULL" | "LEGS" | "OTHER";
 
 type SetSpec = { reps: number; weight: number; rpe?: number };
 type ExerciseSpec = { name: string; sets: SetSpec[] };
@@ -259,7 +261,11 @@ async function main() {
 
       // PR detection per exercise name, per user
       for (const ex of s.exercises) {
-        const bestThisWorkout = ex.sets.reduce(
+        const bestThisWorkout = ex.sets.reduce<{
+          weight: number;
+          reps: number;
+          estimated1RM: number;
+        }>(
           (best, set) => {
             const e1 = epley(set.weight, set.reps);
             return e1 > best.estimated1RM

@@ -1,4 +1,8 @@
-import type { Category } from "@prisma/client";
+export type Category = "PUSH" | "PULL" | "LEGS" | "OTHER";
+
+export function toCategory(v: string): Category {
+  return v === "PUSH" || v === "PULL" || v === "LEGS" ? v : "OTHER";
+}
 
 export const PPL_META: Record<Category, { label: string; color: string; bg: string; chip: string; emoji: string }> = {
   PUSH: { label: "Push", color: "#185FA5", bg: "bg-push", chip: "chip-push", emoji: "💥" },

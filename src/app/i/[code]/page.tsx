@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
@@ -33,12 +32,8 @@ export default async function InviteLanding({
     redirect("/feed");
   }
 
-  // For anonymous visitors — stash the code and send them to signin.
-  cookies().set("ironfeed_ref", params.code, {
-    maxAge: 60 * 60 * 24 * 30,
-    path: "/"
-  });
-
+  // The cookie is set by src/middleware.ts so anonymous visitors keep the
+  // referral code through sign-in.
   if (!referrer) redirect("/signin");
 
   return (

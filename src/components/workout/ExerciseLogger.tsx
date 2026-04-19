@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PPL_TEMPLATE } from "@/lib/ppl";
 import { RestTimer } from "@/components/workout/RestTimer";
-import type { Category } from "@prisma/client";
+import type { Category } from "@/lib/ppl";
 
 type SetInput = { reps: string; weight: string; rpe?: string };
 type ExerciseInput = { name: string; sets: SetInput[] };

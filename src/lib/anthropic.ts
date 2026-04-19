@@ -39,13 +39,15 @@ export async function coachChat(params: {
   const response = await client.messages.create({
     model: CLAUDE_MODEL,
     max_tokens: 2048,
+    // Cached system prompt — the `cache_control` field is accepted by the
+    // Anthropic API but isn't in the SDK's 0.30.x TextBlockParam type yet.
     system: [
       {
         type: "text",
         text: COACH_SYSTEM_PROMPT,
         cache_control: { type: "ephemeral" }
       }
-    ],
+    ] as unknown as string,
     messages: [
       {
         role: "user",

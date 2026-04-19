@@ -1,6 +1,6 @@
 import { ImageResponse } from "@vercel/og";
 import { prisma } from "@/lib/prisma";
-import { PPL_META } from "@/lib/ppl";
+import { PPL_META, toCategory } from "@/lib/ppl";
 import { workoutVolume, formatKg } from "@/lib/volume";
 
 export const runtime = "nodejs";
@@ -20,7 +20,7 @@ export async function GET(
 
   if (!w) return new Response("not found", { status: 404 });
 
-  const meta = PPL_META[w.category];
+  const meta = PPL_META[toCategory(w.category)];
   const volume = formatKg(workoutVolume(w.exercises));
   const topLifts = w.exercises
     .map((ex) => {
@@ -35,6 +35,11 @@ export async function GET(
     })
     .filter((x) => x.weight > 0)
     .slice(0, 4);
+
+  const prLabel =
+    w.prs.length > 0
+      ? `🏅 ${w.prs.length} new PR${w.prs.length > 1 ? "s" : ""}`
+      : "";
 
   return new ImageResponse(
     (
@@ -73,9 +78,11 @@ export async function GET(
             IF
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: "40px", fontWeight: 800 }}>IronFeed</div>
-            <div style={{ fontSize: "26px", opacity: 0.6 }}>
-              @{w.user.username}
+            <div style={{ display: "flex", fontSize: "40px", fontWeight: 800 }}>
+              IronFeed
+            </div>
+            <div style={{ display: "flex", fontSize: "26px", opacity: 0.6 }}>
+              {`@${w.user.username}`}
             </div>
           </div>
         </div>
@@ -84,13 +91,12 @@ export async function GET(
           style={{
             marginTop: "120px",
             display: "flex",
-            flexDirection: "column",
-            gap: "8px"
+            flexDirection: "column"
           }}
         >
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
               alignSelf: "flex-start",
               padding: "12px 24px",
               borderRadius: "999px",
@@ -103,6 +109,7 @@ export async function GET(
           </div>
           <div
             style={{
+              display: "flex",
               fontSize: "110px",
               lineHeight: 1.05,
               fontWeight: 900,
@@ -111,11 +118,11 @@ export async function GET(
           >
             {w.title}
           </div>
-          {w.prs.length > 0 && (
+          {prLabel && (
             <div
               style={{
+                display: "flex",
                 marginTop: "28px",
-                display: "inline-flex",
                 alignSelf: "flex-start",
                 padding: "14px 28px",
                 borderRadius: "999px",
@@ -125,7 +132,7 @@ export async function GET(
                 fontWeight: 800
               }}
             >
-              🏅 {w.prs.length} new PR{w.prs.length > 1 ? "s" : ""}
+              {prLabel}
             </div>
           )}
         </div>
@@ -151,10 +158,10 @@ export async function GET(
                 fontSize: "42px"
               }}
             >
-              <span style={{ opacity: 0.9 }}>{l.name}</span>
-              <span style={{ fontWeight: 800 }}>
-                {l.weight}kg × {l.reps}
-              </span>
+              <div style={{ display: "flex", opacity: 0.9 }}>{l.name}</div>
+              <div style={{ display: "flex", fontWeight: 800 }}>
+                {`${l.weight}kg × ${l.reps}`}
+              </div>
             </div>
           ))}
         </div>
@@ -170,16 +177,36 @@ export async function GET(
           }}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ opacity: 0.5, fontSize: "28px", fontWeight: 500 }}>
+            <div
+              style={{
+                display: "flex",
+                opacity: 0.5,
+                fontSize: "28px",
+                fontWeight: 500
+              }}
+            >
               Total volume
-            </span>
-            <span>{volume}</span>
+            </div>
+            <div style={{ display: "flex" }}>{volume}</div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-            <span style={{ opacity: 0.5, fontSize: "28px", fontWeight: 500 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end"
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                opacity: 0.5,
+                fontSize: "28px",
+                fontWeight: 500
+              }}
+            >
               ironfeed.app
-            </span>
-            <span>#IronFeed</span>
+            </div>
+            <div style={{ display: "flex" }}>#IronFeed</div>
           </div>
         </div>
       </div>

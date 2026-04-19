@@ -5,13 +5,12 @@ import { PPLBadge } from "@/components/workout/PPLBadge";
 import { PRBadge } from "@/components/PRBadge";
 import { LikeButton } from "@/components/feed/LikeButton";
 import { workoutVolume, formatKg } from "@/lib/volume";
-import type { Category } from "@prisma/client";
 
 type Props = {
   workout: {
     id: string;
     title: string;
-    category: Category;
+    category: string;
     notes: string | null;
     performedAt: Date;
     user: { username: string; name: string | null; image: string | null };
