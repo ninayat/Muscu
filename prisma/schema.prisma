@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 // ---------- NextAuth ----------
@@ -18,12 +18,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -48,12 +48,7 @@ model VerificationToken {
 
 // ---------- Domain ----------
 
-enum Category {
-  PUSH
-  PULL
-  LEGS
-  OTHER
-}
+// Category stored as String for SQLite compat ("PUSH"|"PULL"|"LEGS"|"OTHER")
 
 model User {
   id            String    @id @default(cuid())
@@ -90,7 +85,7 @@ model Workout {
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
-  category    Category
+  category    String   // PUSH | PULL | LEGS | OTHER
   notes       String?
   performedAt DateTime @default(now())
 
