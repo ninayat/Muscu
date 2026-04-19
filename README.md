@@ -33,12 +33,12 @@ pnpm install        # or: npm install / yarn
 cp .env.example .env
 # → fill in DATABASE_URL, NEXTAUTH_SECRET, ANTHROPIC_API_KEY, etc.
 
-# 3. database
-pnpm prisma migrate dev --name init
-pnpm db:seed        # 3 users, 2 weeks of PPL workouts, PRs, likes, 1 challenge
+# 3. database (use the npm script — `npx prisma` may install Prisma 7 globally and break)
+npm run db:migrate -- --name init
+npm run db:seed     # 3 users, 2 weeks of PPL workouts, PRs, likes, 1 challenge
 
 # 4. run
-pnpm dev            # http://localhost:3000
+npm run dev         # http://localhost:3000
 ```
 
 Seed accounts (sign in with the email magic-link provider if configured):
